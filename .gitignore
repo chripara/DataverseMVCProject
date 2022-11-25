@@ -1,6 +1,6 @@
 .vs/
-.bin/
-.obj/
+bin
+obj
 
 .DS_Store
 node_modules
