@@ -1,23 +1,36 @@
 <template>
-    <div>
-        <label for="firstname">Όνομα</label>
-        <input type="text" v-model="newCustomer.firstname">
-
-        <label for="surname">Επώνυμο</label>
-        <input type="text" v-model="newCustomer.surname">
-
-        <label for="contactPhone">Τηλέφωνο Επικοινωνίας</label>
-        <input type="text" v-model="newCustomer.contactPhone">
-
-        <label for="address">Διεύθυνση Κατοικίας</label>
-        <input type="text" v-model="newCustomer.address">
-
-        <label for="email">Email</label>
-        <input type="text" v-model="newCustomer.email">
-
-        <label>Actions</label>
-        <button @click="createCustomer">Create Customer</button>
+    <div class="d-flex justify-content-center bd-highlight" style="margin-left: -210px">
+        <div class=" bd-highlight" style="justify-items: flex-start;">            
+            <div class="form-floating">
+                <input type="text" class="form-control" style="width: 200%;" id="floatingFirstname" v-model="newCustomer.firstname" placeholder="name@example.com">
+                <label for="floatingFirstname">Όνομα: </label>
+            </div>  
+            <br/>
+            <div class="form-floating">
+                <input type="text" class="form-control" style="width: 200%;" id="floatingSurname" v-model="newCustomer.surname" placeholder="name@example.com">
+                <label for="floatingEmail">Επώνυμο: </label>
+            </div>  
+            <br/>
+            <div class="form-floating">
+                <input type="text" class="form-control" style="width: 200%;" id="floatingEmail" v-model="newCustomer.contactPhone" placeholder="name@example.com">
+                <label for="floatingContactPhone">Τηλέφωνο Επικοινωνίας: </label>
+            </div>  
+            <br/>
+            <div class="form-floating">
+                <input type="text" class="form-control" style="width: 200%;" id="floatingAddress" v-model="newCustomer.address" placeholder="name@example.com">
+                <label for="floatingAddress">Διεύθυνση Κατοικίας: </label>
+            </div>  
+            <br/>
+            <div class="form-floating">
+                <input type="email" class="form-control" style="width: 200%;" id="floatingEmail" v-model="newCustomer.email" placeholder="name@example.com">
+                <label for="floatingEmail">Email:</label>
+            </div>  
+        </div>       
     </div>
+    <br/>
+    <br/>
+
+    <button @click="createCustomer" class="btn btn-outline-success" >Δημιουργία νέου πελάτη</button>
 </template>
 
 

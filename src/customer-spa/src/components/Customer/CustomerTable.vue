@@ -15,52 +15,52 @@
                 </thead>
                 <tbody>
                     <tr :key="index" v-for="(customer, index) in this.customers">
-                        <td>
+                        <td style="justify-content: center; vertical-align: middle;">
                             {{ customer.id }}
                         </td>
-                        <td >
+                        <td style="justify-content: center; vertical-align: middle;">
                             <div v-if="customer.isEdited === true">
-                                <input v-model="this.editedCustomer.firstname" />
+                                <input class="form-control" v-model="this.editedCustomer.firstname" />
                             </div>
-                            <p v-else>
+                            <label v-else>
                                 {{ customer.firstname }}
-                            </p>
+                            </label>
                         </td>
-                        <td>
+                        <td style="justify-content: center; vertical-align: middle;">
                             <div v-if="customer.isEdited === true">
-                                <input v-model="this.editedCustomer.surname" />
+                                <input class="form-control" v-model="this.editedCustomer.surname" />
                             </div>
-                            <p v-else>
+                            <label v-else>
                                 {{ customer.surname }}
-                            </p>
+                            </label>
                         </td>
-                        <td>
+                        <td style="justify-content: center; vertical-align: middle;">
                             <div v-if="customer.isEdited === true">
-                                <input v-model="this.editedCustomer.contactPhone" />
+                                <input class="form-control" v-model="this.editedCustomer.contactPhone" />
                             </div>
-                            <p v-else>
+                            <label v-else>
                                 {{ customer.contactPhone }}
-                            </p>
+                            </label>
                         </td>
-                        <td>
+                        <td style="justify-content: center; vertical-align: middle;">
                             <div v-if="customer.isEdited === true">
-                                <input v-model="this.editedCustomer.address" />
+                                <input class="form-control" v-model="this.editedCustomer.address" />
                             </div>
-                            <p v-else>
+                            <label v-else>
                                 {{ customer.address }}
-                            </p>
+                            </label>
                         </td>
-                        <td>
+                        <td style="justify-content: center; vertical-align: middle;">
                             <div v-if="customer.isEdited === true">
-                                <input v-model="this.editedCustomer.email" />
+                                <input class="form-control" v-model="this.editedCustomer.email" />
                             </div>
-                            <p v-else>
+                            <label v-else style="vertical-align: bottom;">
                                 {{ customer.email }}
-                            </p>
+                            </label>
                         </td>
                         <td>
                             <div v-if="customer.isEdited === true" style="padding: 2px">
-                                <CustomerDone @click="editCustomer(editCustomer)" />
+                                <CustomerDone @click="editCustomer(index)" />
                                 <div style="padding: 1px"></div>
                                 <CustomerClose @click="cancelEdit(customer)"/>
                             </div>
@@ -95,10 +95,9 @@
             return {
                 customers: [],
                 editedCustomer: [],
-                cancelEditedCustomer: [],
                 isARowOnEdit: Boolean
             };
-        },  
+        },
         created() {
             this.getAllCustomers()
             this.isARowOnEdit = false;
@@ -131,15 +130,14 @@
             toggleEdit(customer) {
                 customer.isEdited = !customer.isEdited;
                 this.isARowOnEdit = !this.isARowOnEdit;
-                this.editedCustomer = customer;
-                this.cancelEditedCustomer = customer;
+                
+                    this.editedCustomer = Object.assign({}, customer);     
             },
             cancelEdit(customer) {
-                this.editedCustomer = customer;
-                customer.isEdited = !customer.isEdited;
+                customer.isEdited = false;
                 this.isARowOnEdit = !this.isARowOnEdit;
             },
-            editCustomer() {
+            editCustomer(index) {
                 axios.put("https://localhost:7125/api/Customer/",
                     {
                         id: this.editedCustomer.id,
@@ -150,10 +148,12 @@
                         email: this.editedCustomer.email                        
                     }                    
                 )
-                .then(response => {
-                    console.log(response.data);
+                .then(()=> {
+                    this.customers[index] = Object.assign({}, this.editedCustomer);
+                    this.customers[index].isEdited = !this.customers[index].isEdited;
+                    this.isARowOnEdit = !this.isARowOnEdit;
                 });
-                this.toggleEdit(this.editedCustomer);
+                
             }
         },                  
     }

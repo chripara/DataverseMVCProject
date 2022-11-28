@@ -19,6 +19,8 @@ namespace DataverseMVCProject.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+           
         }
 
         public DbSet<Customer> Customers { get; set; }
