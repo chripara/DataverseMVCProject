@@ -1,15 +1,15 @@
 <template>
-    <section>
-        <div>
+    <section>        
+        <div>            
             <table class="table table-hover" style="text-align: center; vertical-align: center;">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Όνομα</th>
-                        <th>Επώνυμο</th>
-                        <th>Τηλέφωνο Επικοινωνίας</th>
-                        <th>Διεύθυνση Κατοικίας</th>
-                        <th>Email</th>
+                        <th @click="sort('id')" style="width: 60px"># <SortUpSymbol v-show="ascending && sortColumn === 'id'"/> <SortDownSymbol v-show="!ascending && sortColumn === 'id'"/></th>
+                        <th @click="sort('firstname')" >Όνομα <SortUpSymbol v-if="ascending && sortColumn === 'firstname'"/> <SortDownSymbol v-if="!ascending && sortColumn === 'firstname'"/></th>
+                        <th @click="sort('surname')" >Επώνυμο <SortUpSymbol v-if="ascending && sortColumn === 'surname'"/> <SortDownSymbol v-if="!ascending && sortColumn === 'surname'"/></th>
+                        <th @click="sort('contactPhone')" >Τηλέφωνο Επικοινωνίας <SortUpSymbol v-if="ascending && sortColumn === 'contactPhone'"/> <SortDownSymbol v-if="!ascending && sortColumn === 'contactPhone'"/></th>
+                        <th @click="sort('address')" >Διεύθυνση Κατοικίας <SortUpSymbol v-if="ascending && sortColumn === 'address'"/> <SortDownSymbol v-if="!ascending && sortColumn === 'address'"/></th>
+                        <th @click="sort('email')" >Email <SortUpSymbol v-if="ascending && sortColumn === 'email'"/> <SortDownSymbol v-if="!ascending && sortColumn === 'email'"/></th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -67,7 +67,7 @@
                             <div v-else style="padding: 2px">
                                 <CustomerEdit @click="toggleEdit(customer)" :disabled="isARowOnEdit" />
                             </div>
-                            <CustomerDelete @click="deleteCustomer(customer.id)"/>
+                            <CustomerDelete @click="deleteCustomer(customer)"/>
                         </td>  
                     </tr>
                 </tbody>                  
@@ -82,6 +82,8 @@
     import CustomerEdit from './CustomerEdit.vue';
     import CustomerDone from './CustomerDone.vue';
     import CustomerClose from './CustomerClose.vue';
+    import SortDownSymbol from './SortDownSymbol.vue';
+    import SortUpSymbol from './SortUpSymbol.vue';
 
     export default {
         name: 'CustomerTable',  
@@ -89,13 +91,18 @@
             CustomerDelete,
             CustomerEdit,
             CustomerDone,
-            CustomerClose
+            CustomerClose,
+            SortDownSymbol,
+            SortUpSymbol        
         },
         data() {
             return {
                 customers: [],
+                ascending: true,
                 editedCustomer: [],
-                isARowOnEdit: Boolean
+                deletedCustomer: [],
+                isARowOnEdit: Boolean,
+                sortColumn: 'id'
             };
         },
         created() {
@@ -112,26 +119,27 @@
                         customerWithEdit.isEdited = false;
                         this.customers.push(customerWithEdit);
                     }
-                    console.log(this.customers[1]);
                 });
             },
-            deleteCustomer(id) { 
-                axios.delete('https://localhost:7125/api/Customer/',
-                    {data: {id: id}}
-                )
-                    .then(response => {
-                        console.log(response);
+            
+            deleteCustomer(customer) { 
+                if(confirm('Θέλετε να διαγράαψετε τον χρήστη ' + customer.firstname + " " + customer.surname + ';'))
+                {
+                    axios.delete('https://localhost:7125/api/Customer/',
+                        {data: {id: customer.id}}
+                    )
+                    .then(response => {                        
                         if(response.status === 200)
                         {
-                            this.customers = this.customers.filter(e  => e.id !== id);
+                            this.customers = this.customers.filter(e  => e.id !== customer.id);
                         }
-                });    
+                    }); 
+                }                                   
             },
             toggleEdit(customer) {
                 customer.isEdited = !customer.isEdited;
                 this.isARowOnEdit = !this.isARowOnEdit;
-                
-                    this.editedCustomer = Object.assign({}, customer);     
+                this.editedCustomer = Object.assign({}, customer);
             },
             cancelEdit(customer) {
                 customer.isEdited = false;
@@ -151,9 +159,29 @@
                 .then(()=> {
                     this.customers[index] = Object.assign({}, this.editedCustomer);
                     this.customers[index].isEdited = !this.customers[index].isEdited;
-                    this.isARowOnEdit = !this.isARowOnEdit;
+                    this.isARowOnEdit = !this.isARowOnEdit
+                    alert("Ο πελάτης " + this.editedCustomer.firstname + " " + this.editedCustomer.surname + " ανανώθηκε επιτυχώς.")
                 });
                 
+            },
+            sort(column) {    
+                if(this.sortColumn === column){
+                    this.ascending = !this.ascending;
+                }else{
+                    this.ascending = true;
+                    this.sortColumn = column;
+                }                
+                    console.log(this.ascending);
+                this.customers.sort((a,b) => {
+                    if(a[column] > b[column]){
+                        return this.ascending ? 1 : -1
+                    }
+                    else if (a[column] < b[column])
+                    {
+                        return  this.ascending ? -1 : 1;
+                    }
+                    return 0;
+                })
             }
         },                  
     }

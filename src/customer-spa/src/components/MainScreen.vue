@@ -1,5 +1,6 @@
 <template>
     <sections>
+        
         <div style="padding-right: 100px; padding-left: 100px;">
             <div style="height: 90px"  v-if="newCustomer">
                 <h2>Πελατολόγιο</h2>           
@@ -39,7 +40,7 @@
         name: 'MainScreen',
         components: {
             CustomerTable,
-            NewCustomer
+            NewCustomer,
         },
         create() {
             this.newCustomer = false;

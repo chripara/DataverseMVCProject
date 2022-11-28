@@ -1,5 +1,7 @@
-<template>    
-  <MainScreen />
+<template>   
+  <div class="container">
+    <MainScreen />
+  </div>
 </template>
 
 <script>

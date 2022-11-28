@@ -12,7 +12,7 @@
             </div>  
             <br/>
             <div class="form-floating">
-                <input type="text" class="form-control" style="width: 200%;" id="floatingEmail" v-model="newCustomer.contactPhone" placeholder="name@example.com">
+                <input type="tel" class="form-control" style="width: 200%;" id="floatingEmail" v-model="newCustomer.contactPhone" placeholder="name@example.com">
                 <label for="floatingContactPhone">Τηλέφωνο Επικοινωνίας: </label>
             </div>  
             <br/>
@@ -48,7 +48,7 @@
             customers:  []
         },
         create() {
-            console.log(this.customers)
+            console.log(this.customer)
         },
         methods: {
             createCustomer(){
@@ -59,6 +59,15 @@
                     contactPhone: this.newCustomer.contactPhone,
                     address: this.newCustomer.address,
                     email: this.newCustomer.email 
+                })
+                .then((response) => {
+                    this.newCustomer = [];
+                    if(response.status)
+                        alert('Ο πελάτης προστέθηκε επιτυχώς!');
+                })
+                .catch(er => {
+                    if(er)
+                        alert("Παρακαλώ ελέγξτε ξανά τα στοιχεία που προσθέσατε.");
                 });
             }
         }
